@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoesisLabs.Elve.Kodi", "NoesisLabs.Elve.Kodi\NoesisLabs.Elve.Kodi.csproj", "{9A320E59-43AB-44FB-A0A2-0F45165B7F0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoesisLabs.Elve.Kodi.TestHarness", "NoesisLabs.Elve.Kodi.TestHarness\NoesisLabs.Elve.Kodi.TestHarness.csproj", "{24809D96-3FF0-4A21-811D-1E6EB6D0188B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A320E59-43AB-44FB-A0A2-0F45165B7F0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A320E59-43AB-44FB-A0A2-0F45165B7F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A320E59-43AB-44FB-A0A2-0F45165B7F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A320E59-43AB-44FB-A0A2-0F45165B7F0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24809D96-3FF0-4A21-811D-1E6EB6D0188B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24809D96-3FF0-4A21-811D-1E6EB6D0188B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24809D96-3FF0-4A21-811D-1E6EB6D0188B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24809D96-3FF0-4A21-811D-1E6EB6D0188B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
