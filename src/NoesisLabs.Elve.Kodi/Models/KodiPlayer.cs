@@ -811,14 +811,28 @@ namespace NoesisLabs.Elve.Kodi.Models
 				if (!wasConnected && !this.IsConnected)
 				{
 					this._logger.Info("Connecting to notification socket.");
-					this._client.StartNotificationListener();
+					try
+					{
+						this._client.StartNotificationListener();
+					}
+					catch(Exception ex)
+					{
+						this._logger.Error("Failed to start notification listener.", ex);
+					}
 					return;
 				}
 
 				if (wasConnected && !this.IsConnected)
 				{
 					this._logger.Error("Notification socket connection lost. Attempting reconnect.");
-					this._client.StartNotificationListener();
+					try
+					{
+						this._client.StartNotificationListener();
+					}
+					catch(Exception ex)
+					{
+						this._logger.Error("Failed to start notification listener.", ex);
+					}
 					return;
 				}
 
