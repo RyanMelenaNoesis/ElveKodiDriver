@@ -9,7 +9,7 @@ using System.Timers;
 
 namespace NoesisLabs.Elve.Kodi
 {
-	[Driver("Kodi Driver", "A driver for monitoring and controlling Kodi media player.", "Ryan Melena", "Media Player", "", "Kodi", DriverCommunicationPort.Network, DriverMultipleInstances.MultiplePerDriverService, 0, 2, DriverReleaseStages.Production, "Kodi", "https://kodi.tv/", null)]
+	[Driver("Kodi Driver", "A driver for monitoring and controlling Kodi media player.", "Ryan Melena", "Media Player", "", "Kodi", DriverCommunicationPort.Network, DriverMultipleInstances.MultiplePerDriverService, 0, 3, DriverReleaseStages.Production, "Kodi", "https://kodi.tv/", null)]
 	public class KodiDriver : Driver, IMediaPlayerDriver
 	{
 		private const int BASE_INDEX = 1;

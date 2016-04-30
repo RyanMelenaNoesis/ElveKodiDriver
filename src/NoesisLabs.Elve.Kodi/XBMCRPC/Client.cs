@@ -17,7 +17,6 @@ namespace XBMCRPC
 		private ISocket _clientSocket;
 		private uint JsonRpcId = 0;
 		private NotificationListenerSocketState socketState = new NotificationListenerSocketState();
-		private Stream stream;
 
 		public Client(ConnectionSettings settings, IPlatformServices platformServices)
 		{
@@ -140,50 +139,50 @@ namespace XBMCRPC
 
 		private void ListenForNotifications(Stream stream)
 		{
-			this.stream = stream;
-			this.stream.BeginRead(this.socketState.Buffer, 0, NotificationListenerSocketState.BufferSize, this.HandleNotifications, null);
+			stream.BeginRead(this.socketState.Buffer, 0, NotificationListenerSocketState.BufferSize, this.HandleNotifications, stream);
 		}
 
 		private void HandleNotifications(IAsyncResult result)
 		{
-			//get number of bytes read
-			var receivedDataLength = this.stream.EndRead(result);
-
-			//get new message from socket
-			var receivedDataJson = Encoding.UTF8.GetString(this.socketState.Buffer, 0, receivedDataLength);
-
-			//Console.WriteLine("<-- start message -->" + Environment.NewLine + receivedDataJson + Environment.NewLine + "<-- end message -->");
-
-			//append new message to any left over portion of previous message(s)
-			this.socketState.Builder.Append(receivedDataJson);
-
-			//Console.WriteLine("<-- start pre-process json -->" + Environment.NewLine + this.socketState.Builder.ToString() + Environment.NewLine + "<-- end pre-process json -->");
-
-			int index = this.socketState.Builder.ToString().IndexOfLastTokenEnd();
-
-			//Console.WriteLine("<-- start token end index -->" + Environment.NewLine + index.ToString() + Environment.NewLine + "<-- end token end index -->");
-
-			if (index > 0)
+			try
 			{
-				//get complete json notifications
-				string notificationsJson = this.socketState.Builder.ToString().Substring(0, index + 1);
+				var stream = result.AsyncState as Stream;
 
-				//Console.WriteLine("<-- start notification json -->" + Environment.NewLine + notificationsJson + Environment.NewLine + "<-- end notification json -->");
+				//get number of bytes read
+				var receivedDataLength = stream.EndRead(result);
 
-				var notifications = this.ParseJson(notificationsJson);
+				//get new message from socket
+				var receivedDataJson = Encoding.UTF8.GetString(this.socketState.Buffer, 0, receivedDataLength);
 
-				foreach (var notification in notifications)
+				//append new message to any left over portion of previous message(s)
+				this.socketState.Builder.Append(receivedDataJson);
+
+				int index = this.socketState.Builder.ToString().IndexOfLastTokenEnd();
+
+				if (index > 0)
 				{
-					ParseNotification(notification);
+					//get complete json notifications
+					string notificationsJson = this.socketState.Builder.ToString().Substring(0, index + 1);
+
+					var notifications = this.ParseJson(notificationsJson);
+
+					foreach (var notification in notifications)
+					{
+						ParseNotification(notification);
+					}
+
+					//save any left over portion of message
+					this.socketState.Builder.Remove(0, index + 1);
 				}
 
-				//save any left over portion of message
-				this.socketState.Builder.Remove(0, index + 1);
-
-				//Console.WriteLine("<-- start post-process json -->" + Environment.NewLine + this.socketState.Builder.ToString() + Environment.NewLine + "<-- end post-process json -->");
+				stream.BeginRead(this.socketState.Buffer, 0, NotificationListenerSocketState.BufferSize, this.HandleNotifications, stream);
 			}
-
-			this.stream.BeginRead(this.socketState.Buffer, 0, NotificationListenerSocketState.BufferSize, this.HandleNotifications, null);
+			catch
+			{
+				// Assume socket connection lost, prep for reset
+				this._clientSocket = null;
+				this.socketState = new NotificationListenerSocketState();
+			}
 		}
 
 		private IEnumerable<JObject> ParseJson(string json)
