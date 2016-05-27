@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 
 namespace XBMCRPC
@@ -17,9 +18,6 @@ namespace XBMCRPC
 		private ISocket _clientSocket;
 		private uint JsonRpcId = 0;
 		private NotificationListenerSocketState socketState = new NotificationListenerSocketState();
-
-		private event EventHandler<UnhandledExceptionEventArgs> ExceptionDispatcher;
-
 
 		public Client(ConnectionSettings settings, IPlatformServices platformServices)
 		{
@@ -44,11 +42,6 @@ namespace XBMCRPC
 			Textures = new Methods.Textures(this);
 			VideoLibrary = new Methods.VideoLibrary(this);
 			XBMC = new Methods.XBMC(this);
-
-			this.ExceptionDispatcher += (object sender, UnhandledExceptionEventArgs e) =>
-			{
-				throw e.ExceptionObject as Exception;
-			};
 		}
 
 		public Methods.Addons Addons { get; private set; }
@@ -92,18 +85,11 @@ namespace XBMCRPC
 
 			_clientSocket.Connect(_settings.Host, _settings.TcpPort, (result) =>
 			{
-				try
-				{
-					var stream = _clientSocket.GetInputStream();
-					ListenForNotifications(stream);
-				}
-				catch(Exception ex)
-				{
-					if(this.ExceptionDispatcher != null)
-					{
-						this.ExceptionDispatcher(this, new UnhandledExceptionEventArgs(ex, false));
-					}
-				}
+				var socket = result.AsyncState as Socket;
+				socket.EndConnect(result);
+
+				var stream = _clientSocket.GetInputStream();
+				ListenForNotifications(stream);
 			});
 		}
 
@@ -208,7 +194,7 @@ namespace XBMCRPC
 		{
 			var serializer = new JsonSerializer();
 
-            using (var reader = new StringReader(json))
+			using (var reader = new StringReader(json))
 			using (var jsonReader = new JsonTextReader(reader))
 			{
 				jsonReader.SupportMultipleContent = true;

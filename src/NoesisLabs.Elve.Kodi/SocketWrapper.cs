@@ -16,7 +16,7 @@ namespace NoesisLabs.Elve.Kodi
 
 		public void Connect(string hostName, int port, AsyncCallback callback)
 		{
-			this.socket.BeginConnect(hostName, port, callback, null);
+			this.socket.BeginConnect(hostName, port, callback, this.socket);
 		}
 
 		public void Dispose()
