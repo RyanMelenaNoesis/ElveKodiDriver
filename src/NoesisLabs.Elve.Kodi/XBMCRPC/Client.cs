@@ -19,6 +19,8 @@ namespace XBMCRPC
 		private uint JsonRpcId = 0;
 		private NotificationListenerSocketState socketState = new NotificationListenerSocketState();
 
+		public event EventHandler<UnhandledExceptionEventArgs> ExceptionDispatcher;
+
 		public Client(ConnectionSettings settings, IPlatformServices platformServices)
 		{
 			PlatformServices = platformServices;
@@ -85,11 +87,21 @@ namespace XBMCRPC
 
 			_clientSocket.Connect(_settings.Host, _settings.TcpPort, (result) =>
 			{
-				var socket = result.AsyncState as Socket;
-				socket.EndConnect(result);
+				try
+				{
+					var socket = result.AsyncState as Socket;
+					socket.EndConnect(result);
 
-				var stream = _clientSocket.GetInputStream();
-				ListenForNotifications(stream);
+					var stream = _clientSocket.GetInputStream();
+					ListenForNotifications(stream);
+				}
+				catch (Exception ex)
+				{
+					if (this.ExceptionDispatcher != null)
+					{
+						this.ExceptionDispatcher(this, new UnhandledExceptionEventArgs(ex, false));
+					}
+				}
 			});
 		}
 

@@ -69,6 +69,12 @@ namespace NoesisLabs.Elve.Kodi.Models
 			this._client.Playlist.OnClear += Playlist_OnChange;
 			this._client.Playlist.OnRemove += Playlist_OnChange;
 			this._client.Application.OnVolumeChanged += Application_OnVolumeChanged;
+
+			this._client.ExceptionDispatcher += (object sender, UnhandledExceptionEventArgs e) =>
+			{
+				this.IsConnected = false;
+				this._logger.Error("StartNotificationListener failed.", (Exception)e.ExceptionObject);
+			};
 		}
 
 		#region "ClientEventHandlers"
