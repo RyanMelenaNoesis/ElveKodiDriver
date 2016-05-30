@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Elve Kodi Driver"
-#define MyAppVersion "0.1"
+#define MyAppVersion "0.5"
 #define MyAppPublisher "Noesis Labs"
 #define MyAppURL "https://noesislabs.com/"
 
@@ -20,7 +20,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 CreateAppDir=no
 OutputDir=C:\temp\Inno Setup
-OutputBaseFilename=Elve Kodi Driver 0.1
+OutputBaseFilename=Elve Kodi Driver 0.5
 Compression=lzma
 SolidCompression=yes
 
