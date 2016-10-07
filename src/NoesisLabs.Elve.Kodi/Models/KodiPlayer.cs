@@ -1064,7 +1064,7 @@ namespace NoesisLabs.Elve.Kodi.Models
 					this.Artist = String.Join(", ", audioItem.artist.ToArray());
 					this.FanArtPath = videoItem.fanart ?? audioItem.fanart;
 					this.FilePath = videoItem.file;
-					this.Genre = audioItem.genre.FirstOrDefault();
+					this.Genre = audioItem.genre.FirstOrDefault() ?? String.Empty;
 					this.Title = videoItem.title ?? audioItem.title;
 				}
 			}
